@@ -26,7 +26,7 @@
         android:ems="10"
         android:id="@+id/loginEdit"
         android:layout_marginBottom="89dp"
-        android:background="@android:color/white"
+        android:background="@android:drawable/editbox_background"
         android:layout_above="@+id/enterBtn"
         android:layout_centerHorizontal="true"
         android:hint="email@domail" />
@@ -37,11 +37,11 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/passEdit"
+        android:hint="password"
+        android:background="@android:drawable/editbox_background"
         android:layout_centerVertical="true"
         android:layout_alignLeft="@+id/loginEdit"
         android:layout_alignStart="@+id/loginEdit"
-        android:hint="password"
-        android:background="@android:color/white"
         android:layout_alignRight="@+id/loginEdit"
         android:layout_alignEnd="@+id/loginEdit" />
 
