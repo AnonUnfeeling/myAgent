@@ -19,7 +19,7 @@ public class MyListAdapter extends ArrayAdapter<String>{
         this.list=emailDatas;
     }
 
-    public void updata(ArrayList<EmailData> emailDatas){
+    public void update(ArrayList<EmailData> emailDatas){
         list.clear();
         list.addAll(emailDatas);
         this.notifyDataSetChanged();

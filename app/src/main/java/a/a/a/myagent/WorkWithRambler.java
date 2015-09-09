@@ -3,12 +3,10 @@ package a.a.a.myagent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
-
+import java.util.concurrent.ExecutionException;
 import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.BodyPart;
@@ -16,7 +14,6 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Store;
@@ -75,99 +72,52 @@ public class WorkWithRambler extends AsyncTask<Void, Void, Boolean> {
         props.put("mail.smtp.auth", "true");
         props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.setProperty("mail.pop3.socketFactory.fallback", "false");
-        props.setProperty("mail.pop3.socketFactory.port","995");
+        props.setProperty("mail.pop3.socketFactory.port", "995");
 
         return props;
     }
 
-    public String getBogyMessage(int page,int i) {
-        messages = getMessage();
-        String body = null;
-        if(page==1) {
-            try {
-                Multipart multipart = (Multipart) messages[messages.length - 1 - i].getContent();
-
-                for (int j = 0; j < multipart.getCount(); j++) {
-                    BodyPart bodyPart = multipart.getBodyPart(j);
-                    body = bodyPart.getContent().toString();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            } catch (ClassCastException ex) {
-                try {
-                    body = messages[messages.length - 1 - i].getContent().toString();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-            }
-        }else {
-            try {
-                Multipart multipart = (Multipart) messages[messages.length - 1 - i-((page-1)*10)+1].getContent();
-
-                for (int j = 0; j < multipart.getCount(); j++) {
-                    BodyPart bodyPart = multipart.getBodyPart(j);
-
-                    body = bodyPart.getContent().toString();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            } catch (ClassCastException ex) {
-                try {
-                    body = messages[messages.length - 1 - i-((page-1)*10)+1].getContent().toString();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-            }
+    public String getBodyMessage(int page, int i) {
+       String body ="";
+        GetBodyMessage getBodyMessage = new GetBodyMessage();
+        getBodyMessage.execute(page, i);
+        try {
+            body = getBodyMessage.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
-
         return body;
     }
 
     public ArrayList<String> getMessageTitle(int page) {
         ArrayList<String> list = new ArrayList<>();
-        messages = getMessage();
-        if (page == 1) {
-            for (int i = messages.length - 1; i > messages.length - page * 10; i--) {
-                try {
-                    list.add(messages[i].getSubject());
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            for (int i = messages.length - (page - 1) * 10; i > messages.length - page * 10; i--) {
-                try {
-                    list.add(messages[i].getSubject());
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-            }
+        GetMessTitle getMessTitle = new GetMessTitle();
+        getMessTitle.execute(page);
+        try {
+            list = getMessTitle.get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
         return list;
     }
 
     public Message[] getMessage() {
         try {
-            Session session = Session.getInstance(setProperties(hostPOP,995));
+            Session session = Session.getInstance(setProperties(hostPOP, 995));
             Store store = session.getStore("pop3");
-            store.connect(hostPOP, login, password);
+            store.connect(hostPOP,login,password);
+
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_ONLY);
+
             messages = folder.getMessages();
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
         return messages;
     }
 
@@ -231,5 +181,86 @@ public class WorkWithRambler extends AsyncTask<Void, Void, Boolean> {
         }
 
         return true;
+    }
+
+    class GetMessTitle extends AsyncTask<Integer,Void,ArrayList<String>>{
+        @Override
+        protected ArrayList<String> doInBackground(Integer... integers) {
+            ArrayList<String> list = new ArrayList<>();
+            messages = getMessage();
+            if (integers[0] == 1) {
+                for (int i = messages.length - 1; i > messages.length - integers[0] * 10; i--) {
+                    try {
+                        list.add(messages[i].getSubject());
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                for (int i = messages.length - (integers[0] - 1) * 10; i > messages.length - integers[0] * 10; i--) {
+                    try {
+                        list.add(messages[i].getSubject());
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return list;
+        }
+    }
+
+    class GetBodyMessage extends AsyncTask<Integer,Void,String>{
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            messages = getMessage();
+            String body = null;
+            if(integers[0]==1) {
+                try {
+                    Multipart multipart = (Multipart) messages[messages.length - 1 - integers[1]].getContent();
+
+                    for (int j = 0; j < multipart.getCount(); j++) {
+                        BodyPart bodyPart = multipart.getBodyPart(j);
+                        body = bodyPart.getContent().toString();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                } catch (ClassCastException ex) {
+                    try {
+                        body = messages[messages.length - 1 - integers[1]].getContent().toString();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else {
+                try {
+                    Multipart multipart = (Multipart) messages[messages.length - 1 - integers[1]-((integers[0]-1)*10)+1].getContent();
+
+                    for (int j = 0; j < multipart.getCount(); j++) {
+                        BodyPart bodyPart = multipart.getBodyPart(j);
+
+                        body = bodyPart.getContent().toString();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (MessagingException e) {
+                    e.printStackTrace();
+                } catch (ClassCastException ex) {
+                    try {
+                        body = messages[messages.length - 1 - integers[1]-((integers[0]-1)*10)+1].getContent().toString();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (MessagingException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            return body;
+        }
     }
 }

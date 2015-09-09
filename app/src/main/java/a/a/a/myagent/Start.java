@@ -1,21 +1,19 @@
 package a.a.a.myagent;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-
 import com.google.gson.Gson;
 
 public class Start extends Activity {
 
     ImageButton enterBtn;
     EditText login,pass;
-    ProgressDialog progressDialog=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +28,6 @@ public class Start extends Activity {
             @Override
             public void onClick(View view) {
                 saveSettings();
-                progressDialog = ProgressDialog.show(Start.this, "", "Loading...", true);
-
                 DataDB dataDB = new DataDB();
                 dataDB.setLogin(login.getText().toString());
                 dataDB.setPass(pass.getText().toString());
@@ -58,13 +54,5 @@ public class Start extends Activity {
         ed.putString("login", login.getText().toString()!=null ? login.getText().toString() : "");
         ed.putString("pass", pass.getText().toString() != null ? pass.getText().toString() : "");
         ed.commit();
-    }
-
-    @Override
-    protected void onStop() {
-        if(progressDialog!=null){
-            progressDialog.dismiss();
-        }
-        super.onStop();
     }
 }

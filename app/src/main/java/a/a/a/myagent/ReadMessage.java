@@ -2,15 +2,11 @@ package a.a.a.myagent;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
-
 import com.google.gson.Gson;
-
-import java.util.concurrent.ExecutionException;
 
 public class ReadMessage extends Activity implements View.OnClickListener{
 
@@ -29,20 +25,12 @@ public class ReadMessage extends Activity implements View.OnClickListener{
         workWithRambler = new WorkWithRambler(dataDB.getLogin(),dataDB.getPass());
 
         int postition=getIntent().getIntExtra("position",0);
+        int page = getIntent().getIntExtra("page",0);
 
         webView = (WebView)findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        GetBodyMess getBodyMess = new GetBodyMess();
-        getBodyMess.execute(getIntent().getIntExtra("page",0),postition);
-
-        try {
-            webView.loadDataWithBaseURL(null, getBodyMess.get(), "text/html","utf-8",null);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        webView.loadDataWithBaseURL(null, workWithRambler.getBodyMessage(page, postition), "text/html","utf-8",null);
 
         reply = (ImageButton) findViewById(R.id.replyBtn);
         reply.setOnClickListener(this);
@@ -51,14 +39,5 @@ public class ReadMessage extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         startActivity(new Intent(this, SendActivity.class).putExtra("json",getIntent().getStringExtra("json")));
-    }
-
-    class GetBodyMess extends AsyncTask<Integer,Void,String>{
-
-        @Override
-        protected String doInBackground(Integer... integers) {
-           String mess= workWithRambler.getBogyMessage(integers[0],integers[1]);
-            return mess;
-        }
     }
 }

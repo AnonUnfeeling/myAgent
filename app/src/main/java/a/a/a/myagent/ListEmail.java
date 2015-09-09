@@ -1,9 +1,11 @@
 package a.a.a.myagent;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -13,12 +15,13 @@ import java.util.ArrayList;
 
 public class ListEmail extends Activity implements AdapterView.OnItemClickListener,View.OnClickListener{
 
+    private static final int KEY_FOR_UPDATE_LIST=1;
+
     ListView listView;
     private static MyListAdapter myListAdapter;
     ImageButton nextBtn;
     int k=1;
     WorkWithRambler workWithRambler;
-    ProgressDialog progressDialog=null;
     DataDB dataDB;
     String json;
     Gson gson = new Gson();
@@ -34,9 +37,6 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
         dataDB = gson.fromJson(json, DataDB.class);
 
         workWithRambler = new WorkWithRambler(dataDB.getLogin(), dataDB.getPass());
-
-
-
         myListAdapter = new MyListAdapter(this, initData(k));
         listView.setAdapter(myListAdapter);
 
@@ -47,22 +47,18 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        progressDialog =ProgressDialog.show(this,"","Loading message...",true);
-        dataDB.setTo(workWithRambler.getToSendMail(k, position));
+        dataDB.setTo(workWithRambler.getToSendMail(k,position));
+
         json = gson.toJson(dataDB);
-        startActivity(new Intent(ListEmail.this, ReadMessage.class)
-                .putExtra("bodyMess", workWithRambler.getBogyMessage(k, position))
-                .putExtra("json", json));
+        int pos= position;
+            startActivity(new Intent(ListEmail.this, ReadMessage.class)
+                    .putExtra("position", pos)
+                    .putExtra("json", json)
+                    .putExtra("page", k));
     }
 
-    @Override
-    public void onClick(View view) {
-            myListAdapter.updata(initData(++k));
-    }
-
-    private ArrayList<EmailData> initData(final int page) {
+    public ArrayList<EmailData> initData(int page){
         final ArrayList<EmailData> arrSubject = new ArrayList<>();
-
         ArrayList<String> arrayList = workWithRambler.getMessageTitle(page);
         for (int i = 0; i < arrayList.size(); i++) {
             arrSubject.add(new EmailData(arrayList.get(i)));
@@ -72,10 +68,25 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
     }
 
     @Override
-    protected void onStop() {
-        if(progressDialog!=null) {
-            progressDialog.dismiss();
+    public void onClick(View view) {
+        myListAdapter.update(initData(++k));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(Menu.NONE,KEY_FOR_UPDATE_LIST,Menu.NONE,"Updata").setIcon(R.drawable.update);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case KEY_FOR_UPDATE_LIST :
+                    myListAdapter.update(initData(k));
+                break;
+            default:
+                return false;
         }
-        super.onStop();
+        return super.onOptionsItemSelected(item);
     }
 }
