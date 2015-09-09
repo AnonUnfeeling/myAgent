@@ -212,7 +212,6 @@ public class WorkWithRambler extends AsyncTask<Void, Void, Boolean> {
     @Override
     protected void onPostExecute(Boolean aBoolean) {
         progressDialog.dismiss();
-
     }
 
     @Override
