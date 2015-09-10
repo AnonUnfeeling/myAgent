@@ -30,7 +30,7 @@ public class SendActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-                new WorkWithRambler(this,dataDB.getLogin(),dataDB.getPass()
+                new WorkWithPost(this,dataDB.getLogin(),dataDB.getPass()
         ,dataDB.getTo(),title.getText().toString(),text.getText().toString()).sendMessage();
     }
 }

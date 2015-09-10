@@ -14,7 +14,7 @@ public class ReadMessage extends Activity implements View.OnClickListener{
     WebView webView;
     Gson gson = new Gson();
     DataDB dataDB;
-    WorkWithRambler workWithRambler;
+    WorkWithPost workWithPost;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class ReadMessage extends Activity implements View.OnClickListener{
         setContentView(R.layout.read_message);
 
         dataDB = gson.fromJson(getIntent().getStringExtra("json"),DataDB.class);
-        workWithRambler = new WorkWithRambler(dataDB.getLogin(),dataDB.getPass());
+        workWithPost = new WorkWithPost(dataDB.getLogin(),dataDB.getPass());
 
         int postition=getIntent().getIntExtra("position",0);
         int page = getIntent().getIntExtra("page",0);
@@ -30,7 +30,7 @@ public class ReadMessage extends Activity implements View.OnClickListener{
         webView = (WebView)findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
 
-        webView.loadDataWithBaseURL(null, workWithRambler.getBodyMessage(page, postition), "text/html","utf-8",null);
+        webView.loadDataWithBaseURL(null, workWithPost.getBodyMessage(page, postition), "text/html","utf-8",null);
 
         reply = (ImageButton) findViewById(R.id.replyBtn);
         reply.setOnClickListener(this);

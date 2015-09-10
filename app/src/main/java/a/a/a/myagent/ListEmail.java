@@ -3,13 +3,13 @@ package a.a.a.myagent;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
     private static MyListAdapter myListAdapter;
     ImageButton nextBtn;
     int k=1;
-    WorkWithRambler workWithRambler;
+    WorkWithPost workWithPost;
     DataDB dataDB;
     String json;
     Gson gson = new Gson();
@@ -36,9 +36,15 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
         json=getIntent().getStringExtra("json");
         dataDB = gson.fromJson(json, DataDB.class);
 
-        workWithRambler = new WorkWithRambler(dataDB.getLogin(), dataDB.getPass());
+        workWithPost = new WorkWithPost(dataDB.getLogin(), dataDB.getPass());
         myListAdapter = new MyListAdapter(this, initData(k));
-        listView.setAdapter(myListAdapter);
+        if(myListAdapter.getCount()!=0) {
+            listView.setAdapter(myListAdapter);
+        }else {
+            Toast.makeText(this, getResources().getString(R.string.error), Toast.LENGTH_LONG).show();
+            finish();
+            startActivity(new Intent(this,Start.class));
+        }
 
         listView.setOnItemClickListener(this);
         nextBtn = (ImageButton) findViewById(R.id.nextBtn);
@@ -47,7 +53,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        dataDB.setTo(workWithRambler.getToSendMail(k,position));
+        dataDB.setTo(workWithPost.getToSendMail(k,position));
 
         json = gson.toJson(dataDB);
         int pos= position;
@@ -59,7 +65,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
 
     public ArrayList<EmailData> initData(int page){
         final ArrayList<EmailData> arrSubject = new ArrayList<>();
-        ArrayList<String> arrayList = workWithRambler.getMessageTitle(page);
+        ArrayList<String> arrayList = workWithPost.getMessageTitle(page);
         for (int i = 0; i < arrayList.size(); i++) {
             arrSubject.add(new EmailData(arrayList.get(i)));
         }

@@ -6,5 +6,6 @@
     <string name="header">Sign in to your account at one of the following services: rambler.ru; gmail.com; vk.com; mail.ru;</string>
     <string name="sendBtn">Send</string>
     <string name="reply">Reply</string>
+    <string name="error">Connection error, please check the Internet access and correct login and password</string>
 
 </resources>
