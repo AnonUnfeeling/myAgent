@@ -1,8 +1,8 @@
 package a.a.a.myagent;
 
-public class EmailData {
+class EmailData {
 
-    String title;
+    private final String title;
 
     public EmailData(String title) {
         this.title = title;
@@ -10,9 +10,5 @@ public class EmailData {
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }

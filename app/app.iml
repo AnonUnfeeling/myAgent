@@ -97,7 +97,7 @@
     <orderEntry type="library" exported="" name="mail" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
     <orderEntry type="library" exported="" name="activation" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-23.0.1" level="project" />
     <orderEntry type="library" exported="" name="android-viewholder-listviews-0.2" level="project" />
   </component>
 </module>

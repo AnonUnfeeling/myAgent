@@ -9,9 +9,9 @@ import com.google.gson.Gson;
 
 public class SendActivity extends Activity implements View.OnClickListener{
 
-    EditText text,title;
-    ImageButton sendBtn;
-    DataDB dataDB;
+    private EditText text;
+    private EditText title;
+    private DataDB dataDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,7 @@ public class SendActivity extends Activity implements View.OnClickListener{
         text = (EditText) findViewById(R.id.text);
         title= (EditText) findViewById(R.id.title);
 
-        sendBtn = (ImageButton) findViewById(R.id.sendBtn);
+        ImageButton sendBtn = (ImageButton) findViewById(R.id.sendBtn);
         sendBtn.setOnClickListener(this);
     }
 

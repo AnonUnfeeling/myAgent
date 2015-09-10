@@ -10,29 +10,25 @@ import com.google.gson.Gson;
 
 public class ReadMessage extends Activity implements View.OnClickListener{
 
-    ImageButton reply;
-    WebView webView;
-    Gson gson = new Gson();
-    DataDB dataDB;
-    WorkWithPost workWithPost;
+    private final Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.read_message);
 
-        dataDB = gson.fromJson(getIntent().getStringExtra("json"),DataDB.class);
-        workWithPost = new WorkWithPost(dataDB.getLogin(),dataDB.getPass());
+        DataDB dataDB = gson.fromJson(getIntent().getStringExtra("json"), DataDB.class);
+        WorkWithPost workWithPost = new WorkWithPost(dataDB.getLogin(), dataDB.getPass());
 
         int postition=getIntent().getIntExtra("position",0);
         int page = getIntent().getIntExtra("page",0);
 
-        webView = (WebView)findViewById(R.id.webView);
-        webView.getSettings().setJavaScriptEnabled(true);
+        WebView webView = (WebView) findViewById(R.id.webView);
+       // webView.getSettings().setJavaScriptEnabled(true);
 
-        webView.loadDataWithBaseURL(null, workWithPost.getBodyMessage(page, postition), "text/html","utf-8",null);
+        webView.loadDataWithBaseURL(null, workWithPost.getBodyMessage(page, postition), "text/html", "utf-8", null);
 
-        reply = (ImageButton) findViewById(R.id.replyBtn);
+        ImageButton reply = (ImageButton) findViewById(R.id.replyBtn);
         reply.setOnClickListener(this);
     }
 

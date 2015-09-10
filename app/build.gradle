@@ -4,7 +4,7 @@ android {
     signingConfigs {
     }
     compileSdkVersion 22
-    buildToolsVersion "23.0.0 rc2"
+    buildToolsVersion '23.0.0 rc2'
     defaultConfig {
         applicationId "a.a.a.myagent"
         minSdkVersion 10
@@ -29,4 +29,5 @@ dependencies {
     compile files('libs/activation.jar')
     compile files('libs/android-viewholder-listviews-0.2.jar')
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.android.support:support-annotations:23.0.1'
 }

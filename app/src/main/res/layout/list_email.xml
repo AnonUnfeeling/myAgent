@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#635fe7">
@@ -22,7 +23,8 @@
             android:id="@+id/nextBtn"
             android:src="@drawable/next_button01"
             android:layout_gravity="center_horizontal"
-            android:background="#00000000" />
+            android:background="#00000000"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 
 </LinearLayout>

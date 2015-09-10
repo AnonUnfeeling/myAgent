@@ -11,8 +11,8 @@ import com.google.gson.Gson;
 
 public class Start extends Activity {
 
-    ImageButton enterBtn;
-    EditText login,pass;
+    private EditText login;
+    private EditText pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +22,7 @@ public class Start extends Activity {
         login = (EditText) findViewById(R.id.loginEdit);
         pass = (EditText) findViewById(R.id.passEdit);
 
-        enterBtn = (ImageButton) findViewById(R.id.enterBtn);
+        ImageButton enterBtn = (ImageButton) findViewById(R.id.enterBtn);
         enterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,15 +43,15 @@ public class Start extends Activity {
         super.onStart();
     }
 
-    public void loadSettings() {
+    private void loadSettings() {
         login.setText(getSharedPreferences("setting",MODE_PRIVATE).getString("login", ""));
         pass.setText(getSharedPreferences("setting", MODE_PRIVATE).getString("pass", ""));
     }
 
-    public void saveSettings() {
+    private void saveSettings() {
         SharedPreferences.Editor ed = getSharedPreferences("setting",MODE_PRIVATE).edit();
-        ed.putString("login", login.getText().toString()!=null ? login.getText().toString() : "");
-        ed.putString("pass", pass.getText().toString() != null ? pass.getText().toString() : "");
-        ed.commit();
+        ed.putString("login", login.getText().toString());
+        ed.putString("pass", pass.getText().toString());
+        ed.apply();
     }
 }

@@ -8,10 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
 
-public class MyListAdapter extends ArrayAdapter<String>{
+class MyListAdapter extends ArrayAdapter<String>{
 
-    private ArrayList<EmailData> list;
-    private Context contex;
+    private final ArrayList<EmailData> list;
+    private final Context contex;
 
     public MyListAdapter(Context context, ArrayList<EmailData> emailDatas) {
         super(context,R.layout.style_list_view);

@@ -2,7 +2,7 @@ package a.a.a.myagent;
 
 import java.io.Serializable;
 
-public class DataDB implements Serializable{
+class DataDB implements Serializable{
 
     private String login;
     private String pass;

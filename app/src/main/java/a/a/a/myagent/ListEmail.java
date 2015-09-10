@@ -17,21 +17,30 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
 
     private static final int KEY_FOR_UPDATE_LIST=1;
 
-    ListView listView;
     private static MyListAdapter myListAdapter;
-    ImageButton nextBtn;
-    int k=1;
-    WorkWithPost workWithPost;
-    DataDB dataDB;
-    String json;
-    Gson gson = new Gson();
+    private int k=1;
+    private WorkWithPost workWithPost;
+    private DataDB dataDB;
+    private String json;
+    private final Gson gson = new Gson();
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        dataDB.setTo(workWithPost.getToSendMail(k, position));
+
+        json = gson.toJson(dataDB);
+        startActivity(new Intent(ListEmail.this, ReadMessage.class)
+                .putExtra("position", position)
+                .putExtra("json", json)
+                .putExtra("page", k));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_email);
 
-        listView = (ListView) findViewById(R.id.listEmail);
+        ListView listView = (ListView) findViewById(R.id.listEmail);
 
         json=getIntent().getStringExtra("json");
         dataDB = gson.fromJson(json, DataDB.class);
@@ -47,23 +56,11 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
         }
 
         listView.setOnItemClickListener(this);
-        nextBtn = (ImageButton) findViewById(R.id.nextBtn);
+        ImageButton nextBtn = (ImageButton) findViewById(R.id.nextBtn);
         nextBtn.setOnClickListener(this);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        dataDB.setTo(workWithPost.getToSendMail(k,position));
-
-        json = gson.toJson(dataDB);
-        int pos= position;
-            startActivity(new Intent(ListEmail.this, ReadMessage.class)
-                    .putExtra("position", pos)
-                    .putExtra("json", json)
-                    .putExtra("page", k));
-    }
-
-    public ArrayList<EmailData> initData(int page){
+    private ArrayList<EmailData> initData(int page){
         final ArrayList<EmailData> arrSubject = new ArrayList<>();
         ArrayList<String> arrayList = workWithPost.getMessageTitle(page);
         for (int i = 0; i < arrayList.size(); i++) {
@@ -80,7 +77,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(Menu.NONE,KEY_FOR_UPDATE_LIST,Menu.NONE,"Updata").setIcon(R.drawable.update);
+        menu.add(Menu.NONE,KEY_FOR_UPDATE_LIST,Menu.NONE,"Update").setIcon(R.drawable.update);
         return super.onCreateOptionsMenu(menu);
     }
 
