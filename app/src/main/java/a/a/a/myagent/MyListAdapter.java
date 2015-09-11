@@ -19,6 +19,10 @@ class MyListAdapter extends ArrayAdapter<String>{
         this.list=emailDatas;
     }
 
+    static class ViewHolder {
+        TextView textView;
+    }
+
     public void update(ArrayList<EmailData> emailDatas){
         list.clear();
         list.addAll(emailDatas);
@@ -38,12 +42,19 @@ class MyListAdapter extends ArrayAdapter<String>{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater infater =(LayoutInflater) contex.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view =infater.inflate(R.layout.style_list_view,parent,false);
-        TextView title = (TextView) view.findViewById(R.id.title);
-        EmailData emailData = list.get(position);
-        title.setText(emailData.getTitle());
-        return view;
+        ViewHolder viewHolder;
+        if(convertView==null) {
+            LayoutInflater infater = (LayoutInflater) contex.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = infater.inflate(R.layout.style_list_view, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.textView = (TextView) convertView.findViewById(R.id.title);
+            convertView.setTag(viewHolder);
+        }else {
+           viewHolder = (ViewHolder)convertView.getTag();
+        }
+        viewHolder.textView.setText(getItem(position));
+
+        return convertView;
     }
 
     @Override

@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">MyAgent</string>
-
-    <string name="action_settings">Settings</string>
     <string name="setTextMessage">Message text</string>
     <string name="header">Sign in to your account at one of the following services: rambler.ru; gmail.com; vk.com; mail.ru;</string>
     <string name="error">Connection error, please check the Internet access and correct login and password</string>
     <string name="hintEmail">email@domain</string>
-   <string name="hintPass">password</string>
+    <string name="hintPass">password</string>
 
 </resources>

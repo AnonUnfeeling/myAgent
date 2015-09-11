@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import com.google.gson.Gson;
 
-public class Start extends Activity {
+public class Start extends FragmentActivity {
 
     private EditText login;
     private EditText pass;
@@ -17,6 +19,8 @@ public class Start extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_start);
+
         setContentView(R.layout.activity_start);
 
         login = (EditText) findViewById(R.id.loginEdit);
@@ -34,7 +38,7 @@ public class Start extends Activity {
                 String json = gson.toJson(dataDB);
                 startActivity(new Intent(getApplicationContext(), ListEmail.class).putExtra("json", json));
             }
-        });
+       });
     }
 
     @Override

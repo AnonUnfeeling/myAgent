@@ -24,7 +24,6 @@ public class ReadMessage extends Activity implements View.OnClickListener{
         int page = getIntent().getIntExtra("page",0);
 
         WebView webView = (WebView) findViewById(R.id.webView);
-       // webView.getSettings().setJavaScriptEnabled(true);
 
         webView.loadDataWithBaseURL(null, workWithPost.getBodyMessage(page, postition), "text/html", "utf-8", null);
 
