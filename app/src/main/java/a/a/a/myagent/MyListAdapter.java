@@ -7,13 +7,16 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 class MyListAdapter extends ArrayAdapter<String>{
 
-    private final ArrayList<EmailData> list;
+    private final Set<EmailData> list;
     private final Context contex;
 
-    public MyListAdapter(Context context, ArrayList<EmailData> emailDatas) {
+    public MyListAdapter(Context context, LinkedHashSet<EmailData> emailDatas) {
         super(context,R.layout.style_list_view);
         this.contex=context;
         this.list=emailDatas;
@@ -23,8 +26,7 @@ class MyListAdapter extends ArrayAdapter<String>{
         TextView textView;
     }
 
-    public void update(ArrayList<EmailData> emailDatas){
-        list.clear();
+    public void update(LinkedHashSet<EmailData> emailDatas){
         list.addAll(emailDatas);
         this.notifyDataSetChanged();
     }
@@ -37,7 +39,8 @@ class MyListAdapter extends ArrayAdapter<String>{
 
     @Override
     public String getItem(int position) {
-        return list.get(position).getTitle();
+        List<EmailData> list1= new ArrayList<>(list);
+        return list1.get(position).getTitle();
     }
 
     @Override
