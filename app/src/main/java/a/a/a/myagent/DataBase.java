@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataBase extends SQLiteOpenHelper {
+class DataBase extends SQLiteOpenHelper {
 
     public DataBase(Context context){
         super(context,"users",null,2);

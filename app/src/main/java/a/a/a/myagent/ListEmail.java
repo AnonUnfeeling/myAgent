@@ -66,7 +66,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < arrayList.size(); i++) {
+        for (int i = 0; i < (arrayList != null ? arrayList.size() : 0); i++) {
             arrSubject.add(new EmailData(arrayList.get(i)));
         }
 
