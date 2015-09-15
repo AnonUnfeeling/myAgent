@@ -1,5 +1,7 @@
 package a.a.a.myagent;
 
+import android.content.Context;
+
 import java.io.Serializable;
 
 class DataDB implements Serializable{
@@ -9,6 +11,14 @@ class DataDB implements Serializable{
     private String to;
 
     public DataDB() {
+    }
+
+    public DataDB(Context context, String login, String pass) {
+        this.login=login;
+        this.pass=pass;
+
+        DataBase dataBase = new DataBase(context);
+        dataBase.addLoginAndPassword(this);
     }
 
     public String getTo() {

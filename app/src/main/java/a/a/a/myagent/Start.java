@@ -2,16 +2,19 @@ package a.a.a.myagent;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 
-public class Start extends FragmentActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Start extends Activity {
 
     private EditText login;
     private EditText pass;
@@ -30,32 +33,15 @@ public class Start extends FragmentActivity {
         enterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveSettings();
-                DataDB dataDB = new DataDB();
-                dataDB.setLogin(login.getText().toString());
-                dataDB.setPass(pass.getText().toString());
-                Gson gson = new Gson();
-                String json = gson.toJson(dataDB);
-                startActivity(new Intent(getApplicationContext(), ListEmail.class).putExtra("json", json));
+                if(login.getText().length()>1&&pass.getText().length()>1) {
+                    DataDB dataDB = new DataDB(Start.this,login.getText().toString(),pass.getText().toString());
+                    Gson gson = new Gson();
+                    String json = gson.toJson(dataDB);
+                    startActivity(new Intent(getApplicationContext(), ListEmail.class).putExtra("json", json));
+                }else {
+                    Toast.makeText(getApplicationContext(),"Enter your login and password",Toast.LENGTH_LONG).show();
+                }
             }
-       });
-    }
-
-    @Override
-    protected void onStart() {
-        loadSettings();
-        super.onStart();
-    }
-
-    private void loadSettings() {
-        login.setText(getSharedPreferences("setting",MODE_PRIVATE).getString("login", ""));
-        pass.setText(getSharedPreferences("setting", MODE_PRIVATE).getString("pass", ""));
-    }
-
-    private void saveSettings() {
-        SharedPreferences.Editor ed = getSharedPreferences("setting",MODE_PRIVATE).edit();
-        ed.putString("login", login.getText().toString());
-        ed.putString("pass", pass.getText().toString());
-        ed.apply();
+        });
     }
 }

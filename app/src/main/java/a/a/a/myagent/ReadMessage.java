@@ -21,8 +21,8 @@ import javax.mail.Multipart;
 public class ReadMessage extends Activity implements View.OnClickListener{
 
     private final Gson gson = new Gson();
-    WorkWithPost workWithPost;
-    ProgressDialog progressDialog;
+    private WorkWithPost workWithPost;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +43,7 @@ public class ReadMessage extends Activity implements View.OnClickListener{
 
         try {
             webView.loadDataWithBaseURL(null, getBodyMessage.get(), "text/html", "utf-8", null);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
 

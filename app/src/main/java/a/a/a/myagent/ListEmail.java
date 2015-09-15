@@ -14,7 +14,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.concurrent.ExecutionException;
 import javax.mail.Message;
@@ -30,9 +29,9 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
     private DataDB dataDB;
     private String json;
     private final Gson gson = new Gson();
-    ListView listView;
-    GetMessTitle getMessTitle = new GetMessTitle();
-    ProgressDialog progressDialog;
+    private ListView listView;
+    private GetMessTitle getMessTitle = new GetMessTitle();
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +63,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
         ArrayList<String> arrayList = null;
         try {
             arrayList = getMessTitle.get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         for (int i = 0; i < arrayList.size(); i++) {
@@ -125,9 +122,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
                     arrSubject.add(new EmailData(arrayList.get(i)));
                 }
                 myListAdapter.update(arrSubject);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
@@ -155,14 +150,14 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
                     ex.printStackTrace();
                 }
             } else {
-                for (int i = messages.length- (integers[0] - 1) * 10; i > messages.length - integers[0] * 10; i--) {
-                    try {
+                try {
+                    for (int i = messages.length- (integers[0] - 1) * 10; i > messages.length - integers[0] * 10; i--) {
                         list.add(messages[i].getSubject());
+                    }
                     } catch (NullPointerException | MessagingException ex){
                         ex.printStackTrace();
                     }
                 }
-            }
             return list;
         }
     }
