@@ -45,6 +45,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
 
         workWithPost = new WorkWithPost(dataDB.getLogin(), dataDB.getPass());
         myListAdapter = new MyListAdapter(this, initData(k));
+
         if(myListAdapter.getCount()!=0) {
             listView.setAdapter(myListAdapter);
         }else {

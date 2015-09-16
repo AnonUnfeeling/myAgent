@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.gson.Gson;
+import java.util.List;
 
 public class Start extends Activity {
 
@@ -38,5 +39,14 @@ public class Start extends Activity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.sendBroadcast(new Intent(this,Receiver.class));
+        List<DataDB> list = new DataBase(Start.this).getAllUsers();
+        login.setText(list.get(0).getLogin());
+        pass.setText(list.get(0).getPass());
     }
 }

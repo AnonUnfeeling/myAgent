@@ -30,6 +30,13 @@
         <activity android:name=".ListEmail"/>
         <activity android:name=".SendActivity"/>
         <activity android:name=".ReadMessage"/>
+
+        <receiver android:name=".Receiver">
+                 <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
