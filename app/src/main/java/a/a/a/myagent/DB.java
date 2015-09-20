@@ -1,24 +1,40 @@
 package a.a.a.myagent;
 
 import android.content.Context;
-
 import java.io.Serializable;
 
-class DataDB implements Serializable{
+class DB implements Serializable{
 
     private String login;
     private String pass;
     private String to;
+    private String title;
+    private int size;
 
-    public DataDB() {
+    public DB() {
     }
 
-    public DataDB(Context context, String login, String pass) {
-        this.login=login;
-        this.pass=pass;
+    public DB(String title) {
+        this.title = title;
+    }
 
-        DataBase dataBase = new DataBase(context);
-        dataBase.addLoginAndPassword(this);
+    public DB(String login, String pass) {
+
+        this.login = login;
+        this.pass = pass;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getSize() {
+
+        return size;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public String getTo() {

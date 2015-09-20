@@ -29,8 +29,8 @@ public class ReadMessage extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.read_message);
 
-        DataDB dataDB = gson.fromJson(getIntent().getStringExtra("json"), DataDB.class);
-        workWithPost = new WorkWithPost(dataDB.getLogin(), dataDB.getPass());
+        DB DB = gson.fromJson(getIntent().getStringExtra("json"), DB.class);
+        workWithPost = new WorkWithPost(DB.getLogin(), DB.getPass());
 
         int postition=getIntent().getIntExtra("position",0);
         int page = getIntent().getIntExtra("page",0);

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -26,7 +27,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
     private static MyListAdapter myListAdapter;
     private int k=1;
     private WorkWithPost workWithPost;
-    private DataDB dataDB;
+    private DB DB;
     private String json;
     private final Gson gson = new Gson();
     private ListView listView;
@@ -41,12 +42,17 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
         listView = (ListView) findViewById(R.id.listEmail);
 
         json=getIntent().getStringExtra("json");
-        dataDB = gson.fromJson(json, DataDB.class);
+        DB = gson.fromJson(json, DB.class);
 
-        workWithPost = new WorkWithPost(dataDB.getLogin(), dataDB.getPass());
+        DataBase dataBase = new DataBase(ListEmail.this);
+
+        workWithPost = new WorkWithPost(DB.getLogin(),DB.getPass());
+
         myListAdapter = new MyListAdapter(this, initData(k));
 
         if(myListAdapter.getCount()!=0) {
+            DB.setSize(workWithPost.getSizeMessage());
+            dataBase.addLoginAndPassword(DB);
             listView.setAdapter(myListAdapter);
         }else {
             Toast.makeText(this, getResources().getString(R.string.error), Toast.LENGTH_LONG).show();
@@ -58,8 +64,8 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
         listView.setOnScrollListener(this);
     }
 
-    private LinkedHashSet <EmailData> initData(int page){
-        final LinkedHashSet<EmailData> arrSubject = new LinkedHashSet <>();
+    private LinkedHashSet <DB> initData(int page){
+        final LinkedHashSet<DB> arrSubject = new LinkedHashSet <>();
         getMessTitle.execute(page);
         ArrayList<String> arrayList = null;
         try {
@@ -68,7 +74,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
             e.printStackTrace();
         }
         for (int i = 0; i < (arrayList != null ? arrayList.size() : 0); i++) {
-            arrSubject.add(new EmailData(arrayList.get(i)));
+            arrSubject.add(new DB(arrayList.get(i)));
         }
 
         return arrSubject;
@@ -76,9 +82,9 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        dataDB.setTo(workWithPost.getToSendMail(k, position));
+        DB.setTo(workWithPost.getToSendMail(k, position));
 
-        json = gson.toJson(dataDB);
+        json = gson.toJson(DB);
         startActivity(new Intent(ListEmail.this, ReadMessage.class)
                 .putExtra("position", position)
                 .putExtra("json", json)
@@ -117,10 +123,10 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
             progressDialog = ProgressDialog.show(this,"","Loading messages...");
             getMessTitle.execute(++k);
             try {
-                LinkedHashSet <EmailData> arrSubject = new LinkedHashSet <>();
+                LinkedHashSet <DB> arrSubject = new LinkedHashSet <>();
                 ArrayList<String> arrayList = getMessTitle.get();
                 for (int i = 0; i < arrayList.size(); i++) {
-                    arrSubject.add(new EmailData(arrayList.get(i)));
+                    arrSubject.add(new DB(arrayList.get(i)));
                 }
                 myListAdapter.update(arrSubject);
             } catch (InterruptedException | ExecutionException e) {
@@ -139,7 +145,7 @@ public class ListEmail extends Activity implements AdapterView.OnItemClickListen
 
         @Override
         protected ArrayList<String> doInBackground(Integer... integers) {
-            ArrayList<String> list = new ArrayList<>();
+           ArrayList<String> list = new ArrayList<>();
            Message[] messages = workWithPost.getMessage();
 
             if (integers[0] == 1) {

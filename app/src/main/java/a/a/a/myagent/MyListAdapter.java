@@ -13,10 +13,10 @@ import java.util.Set;
 
 class MyListAdapter extends ArrayAdapter<String>{
 
-    private final Set<EmailData> list;
+    private final Set<DB> list;
     private final Context contex;
 
-    public MyListAdapter(Context context, LinkedHashSet<EmailData> emailDatas) {
+    public MyListAdapter(Context context, LinkedHashSet<DB> emailDatas) {
         super(context,R.layout.style_list_view);
         this.contex=context;
         this.list=emailDatas;
@@ -26,7 +26,7 @@ class MyListAdapter extends ArrayAdapter<String>{
         TextView textView;
     }
 
-    public void update(LinkedHashSet<EmailData> emailDatas){
+    public void update(LinkedHashSet<DB> emailDatas){
         list.addAll(emailDatas);
         this.notifyDataSetChanged();
     }
@@ -39,7 +39,7 @@ class MyListAdapter extends ArrayAdapter<String>{
 
     @Override
     public String getItem(int position) {
-        List<EmailData> list1= new ArrayList<>(list);
+        List<DB> list1= new ArrayList<>(list);
         return list1.get(position).getTitle();
     }
 

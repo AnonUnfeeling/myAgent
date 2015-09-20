@@ -11,7 +11,7 @@ public class SendActivity extends Activity implements View.OnClickListener{
 
     private EditText text;
     private EditText title;
-    private DataDB dataDB;
+    private DB DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +19,7 @@ public class SendActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.send_message);
 
         Gson gson = new Gson();
-        dataDB = gson.fromJson(getIntent().getStringExtra("json"),DataDB.class);
+        DB = gson.fromJson(getIntent().getStringExtra("json"),DB.class);
 
         text = (EditText) findViewById(R.id.text);
         title= (EditText) findViewById(R.id.title);
@@ -30,7 +30,7 @@ public class SendActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-                new WorkWithPost(this,dataDB.getLogin(),dataDB.getPass()
-        ,dataDB.getTo(),title.getText().toString(),text.getText().toString()).sendMessage();
+                new WorkWithPost(this, DB.getLogin(), DB.getPass()
+        , DB.getTo(),title.getText().toString(),text.getText().toString()).sendMessage();
     }
 }

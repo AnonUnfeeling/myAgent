@@ -1,7 +1,9 @@
 package a.a.a.myagent;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -29,13 +31,13 @@ public class Start extends Activity {
         enterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(login.getText().length()>1&&pass.getText().length()>1) {
-                    DataDB dataDB = new DataDB(Start.this,login.getText().toString(),pass.getText().toString());
+                if (login.getText().length() > 1 && pass.getText().length() > 1) {
+                    DB db = new DB(login.getText().toString(), pass.getText().toString());
                     Gson gson = new Gson();
-                    String json = gson.toJson(dataDB);
+                    String json = gson.toJson(db);
                     startActivity(new Intent(getApplicationContext(), ListEmail.class).putExtra("json", json));
-                }else {
-                    Toast.makeText(getApplicationContext(),"Enter your login and password",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Enter your login and password", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -44,9 +46,22 @@ public class Start extends Activity {
     @Override
     protected void onStart() {
         super.onStart();
-        this.sendBroadcast(new Intent(this,Receiver.class));
-        List<DataDB> list = new DataBase(Start.this).getAllUsers();
-        login.setText(list.get(0).getLogin());
-        pass.setText(list.get(0).getPass());
+
+        getApplication().registerReceiver(new Receiver(), new IntentFilter("android.intent.action.TIME_TICK"));
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Start.this.sendBroadcast(new Intent(Start.this, Receiver.class));
+//            }
+//        }).start();
+
+        List<DB> db = new DataBase(Start.this).getAllUsers();
+        if(!db.isEmpty()) {
+            for (int i = 0; i < db.size(); i++) {
+                login.setText(db.get(0).getLogin());
+                pass.setText(db.get(0).getPass());
+                System.out.println(db.get(i).getSize());
+            }
+        }
     }
 }
